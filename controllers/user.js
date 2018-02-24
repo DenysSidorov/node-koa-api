@@ -6,8 +6,7 @@ User имеет уникальный email, а также даты создан�
 **** GET /users/:id - получить юзера по id, например: /users/57ffe7300b863737ddfe9a39
 **** GET /users - получить массив юзеров
 **** DELETE /users/:id - удалить пользователя
-
-POST /users - создать пользователя
+**** POST /users - создать пользователя
   Метод POST позволяет указать только email и displayName (нельзя при создании юзера указать его _id)
 
 PATCH /users/:id - модифицировать пользователя
@@ -50,6 +49,36 @@ module.exports.createTestUser = async () => {
       });
     });
   });
+}
+
+module.exports.createUser = async (ctx, next) => {
+  // console.log(ctx.request.body);
+  let email = ctx.request.body.email;
+  let displayName = ctx.request.body.displayName;
+  if (!displayName || !email) {
+  }
+  try {
+    await User.create({email, displayName});
+  } catch (er) {
+    ctx.throw(400, {errors: er.errors})
+  }
+  ctx.statusCode = 200;
+  ctx.body = 'ok'
+}
+
+module.exports.changeUser = async (ctx, next) => {
+  let id = ctx.params.id;
+  let email = ctx.request.body.email;
+  let displayName = ctx.request.body.displayName;
+  if (!displayName || !email) {
+  }
+  try {
+    let user = await User.findById(id);
+    await User.findByIdAndUpdate(user.id, Object.assign(user,{email},{displayName}));
+  } catch (er) {
+    ctx.throw(400, {errors: er.errors})
+  }
+  ctx.body = 'ok'
 }
 
 module.exports.getAll = async function (ctx, next) {
