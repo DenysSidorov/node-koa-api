@@ -44,7 +44,7 @@ module.exports.createUser = async (ctx, next) => {
     await User.create({email, displayName, password});
   } catch (er) {
     console.log(er);
-    ctx.throw(405, {errors: er.errors});
+    ctx.throw(400, er);
   }
   ctx.statusCode = 200;
   ctx.body = 'ok';
