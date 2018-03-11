@@ -37,12 +37,14 @@ module.exports.createUser = async (ctx, next) => {
   // console.log(ctx.request.body);
   let email = ctx.request.body.email;
   let displayName = ctx.request.body.displayName;
-  if (!displayName || !email) {
+  let password = ctx.request.body.password;
+  if (!displayName || !email || !password) {
   }
   try {
-    await User.create({email, displayName});
+    await User.create({email, displayName, password});
   } catch (er) {
-    ctx.throw(400, {errors: er.errors});
+    console.log(er);
+    ctx.throw(405, {errors: er.errors});
   }
   ctx.statusCode = 200;
   ctx.body = 'ok';
