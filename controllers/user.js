@@ -32,24 +32,6 @@ const User = require('../models/user');
 const mongoose = require('../connection/index');
 var ObjectId = mongoose.Types.ObjectId;
 
-module.exports.createTestUser = async () => {
-  const mary = new User({
-    email: 'mary@mail.com'
-  });
-  User.remove({}, function (err) {
-    mary.save(function (err, result) {
-      console.log(result);
-      User.findOne({
-        email: 'mary@mail.com'
-      }, function (err, user) {
-        console.log(user);
-        // ... do more with mary
-        // no unref!
-        mongoose.disconnect();
-      });
-    });
-  });
-}
 
 module.exports.createUser = async (ctx, next) => {
   // console.log(ctx.request.body);
@@ -60,10 +42,10 @@ module.exports.createUser = async (ctx, next) => {
   try {
     await User.create({email, displayName});
   } catch (er) {
-    ctx.throw(400, {errors: er.errors})
+    ctx.throw(400, {errors: er.errors});
   }
   ctx.statusCode = 200;
-  ctx.body = 'ok'
+  ctx.body = 'ok';
 }
 
 module.exports.changeUser = async (ctx, next) => {
@@ -74,14 +56,14 @@ module.exports.changeUser = async (ctx, next) => {
   }
   try {
     let user = await User.findById(id);
-    await User.findByIdAndUpdate(user.id, Object.assign(user,{email},{displayName}));
+    await User.findByIdAndUpdate(user.id, Object.assign(user, {email}, {displayName}));
   } catch (er) {
     ctx.throw(400, {errors: er.errors})
   }
   ctx.body = 'ok'
 }
 
-module.exports.getAll = async function (ctx, next) {
+module.exports.getAll = async (ctx, next) => {
 
   let users = await User.find({}, {});
   ctx.body = users;
@@ -104,7 +86,7 @@ module.exports.deleteById = async (ctx, next) => {
   ctx.body = user._id;
 }
 
-module.exports.getById = async function (ctx, next) {
+module.exports.getById = async (ctx, next) => {
   let id = ctx.params.id;
 
   if (!id) {
@@ -122,4 +104,32 @@ module.exports.getById = async function (ctx, next) {
   } else {
     ctx.throw(404);
   }
+}
+
+
+module.exports.createTestUser = async (ctx, next) => {
+  console.log(1111);
+  const mary = new User({
+    email: 'mary' + Math.random()*1+ 5 + '@mail.com'
+  });
+  mary.save(function (err, result) {
+    if (err) {
+      console.log(err);
+    }
+    console.log(result);
+    User.findOne({
+      // email: 'mary@mail.com'
+    }, function (err, users) {
+      if (err) {
+        console.log(err);
+      }
+      console.log(users);
+      console.log(ctx);
+      ctx.statusCode = 200;
+      ctx.body = 'ok'
+      // ... do more with mary
+      // no unref!
+      // mongoose.disconnect();
+    });
+  });
 }

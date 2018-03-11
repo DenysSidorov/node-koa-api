@@ -14,6 +14,8 @@ const fs = require('fs');
 
 const app = new Koa();
 
+const mongoose = require('./connection/index');
+
 const handlers = fs.readdirSync(path.join(__dirname, 'middlewares')).sort();
 handlers.forEach(handler => require('./middlewares/' + handler).init(app));
 
