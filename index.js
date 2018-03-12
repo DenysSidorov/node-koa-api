@@ -24,4 +24,13 @@ const mainRouter = require('./routes/index');
 
 app.use(mainRouter.routes());
 
+
+// app.use(async ctx => {
+//   const { session } = ctx;
+//   let n = session.views || 0;
+//   session.views = ++n;
+//   ctx.body = `${n} view(s)`;
+// });
+
+
 app.listen(config.get('port'));
