@@ -32,11 +32,9 @@ var userSchema = new mongoose.Schema({
   },
   passwordHash: {
     type: String,
-    required: true
   },
   salt: {
     type: String,
-    required: true
   }
 }, {
   timestamps: true
